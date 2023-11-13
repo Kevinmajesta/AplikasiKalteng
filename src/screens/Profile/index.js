@@ -1,4 +1,5 @@
 import React from 'react';
+import {useNavigation} from '@react-navigation/native';
 import {
   View,
   StyleSheet,
@@ -25,6 +26,8 @@ import {
   SecurityUser,
 } from 'iconsax-react-native';
 
+const navigation = useNavigation();
+
 const ProfileScreen = () => {
   return (
     <View style={styles.container}>
@@ -36,7 +39,6 @@ const ProfileScreen = () => {
         <Akun />
         {/* Konten profil Anda di sini */}
       </ScrollView>
-      <Footer />
     </View>
   );
 };
@@ -163,46 +165,6 @@ const akun = StyleSheet.create({
   },
 });
 
-const Footer = () => {
-  return (
-    <View style={footer.container}>
-      <TouchableOpacity style={footer.menu}>
-        <Home size={24} variant='Bold' color="#C05F2C" />
-        <Text style={footer.menuText}>Home</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={footer.menu}>
-        <Activity size={24} variant='Bold' color="#C05F2C" />
-        <Text style={footer.menuText}>Content</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={footer.menu}>
-        <Profile size={24} variant='Bold' color="#C05F2C" />
-        <Text style={footer.menuText}>Profile</Text>
-      </TouchableOpacity>
-    </View>
-  );
-};
-
-const footer = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    height: 55,
-    backgroundColor: '#FFFFFF', 
-    borderColor:'#DFD7BF',
-    borderWidth:1,
-  },
-  menu: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  menuText: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: '#333', 
-  },
-});
 
 
 export default ProfileScreen;

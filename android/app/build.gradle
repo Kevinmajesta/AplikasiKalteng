@@ -73,9 +73,9 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.pushkalteng"
+    namespace "com.kaltengbuilt"
     defaultConfig {
-        applicationId "com.pushkalteng"
+        applicationId "com.kaltengbuilt"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

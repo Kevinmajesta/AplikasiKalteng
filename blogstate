@@ -1,0 +1,57 @@
+// BlogState.js
+
+import {useState} from 'react';
+
+const useBlogState = () => {
+  const [blogs, setBlogs] = useState([
+    {
+      id: 1,
+      title: 'Tanjung Puting',
+      location: 'Kotawaringin Barat',
+      imageUrl:
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpPo36cmOpqXOaJ3B5TQ3TSSEZb7zHOwMHag&usqp=CAU',
+    },
+    {
+      id: 2,
+      title: 'Ujung Pandaran',
+      location: 'Kotawaringin Timur',
+      imageUrl:
+        'https://i0.wp.com/mentayanet.com/wp-content/uploads/2023/02/Pantai-Kalimantan-Tengah-e1676192534337.webp?fit=750%2C375&ssl=1',
+    },
+    {
+      id: 3,
+      title: 'Sungai Panjang',
+      location: 'Sampit',
+      imageUrl:
+        'https://www.intimnews.com/wp-content/uploads/2023/04/whatsapp-image-2023-04-25-at-19.52.43jpeg.jpg',
+    },
+    {
+      id: 4,
+      title: 'Rumah Betang',
+      location: 'Palangkaraya',
+      imageUrl:
+        'https://www.daerahkita.com/gambar/rumah-betang-tradisional-kalteng-1.webp',
+    },
+    {
+      id: 5,
+      title: 'Batu Banama',
+      location: 'Katingan',
+      imageUrl:
+        'https://osccdn.medcom.id/images/content/2021/09/10/234ad084213642ebdf4ba658361f63d8.jpg',
+    },
+    {
+        id: 6,
+        title: 'Tugu Soekarno',
+        location: 'Palangkaraya',
+        imageUrl:
+          'https://kaltengtoday.com/wp-content/uploads/2020/05/2-7.jpg',
+      },
+  ]);
+
+  return {
+    blogs,
+    setBlogs,
+  };
+};
+
+export default useBlogState;

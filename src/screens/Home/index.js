@@ -56,7 +56,6 @@ const HomeScreen = () => {
         <BlogUtama />
         <BlogAkhir />
       </ScrollView>
-      <Footer />
     </View>
   );
 };
@@ -650,43 +649,3 @@ const akhir = StyleSheet.create({
   },
 });
 
-const Footer = () => {
-    return (
-      <View style={styles.container}>
-        <TouchableOpacity style={styles.menu}>
-          <Home size={24} variant='Bold' color="#C05F2C" />
-          <Text style={styles.menuText}>Home</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.menu}>
-          <Activity size={24} variant='Bold' color="#C05F2C" />
-          <Text style={styles.menuText}>Content</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.menu}>
-          <Profile size={24} variant='Bold' color="#C05F2C" />
-          <Text style={styles.menuText}>Profile</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  };
-  
-  const styles = StyleSheet.create({
-    container: {
-      flexDirection: 'row',
-      justifyContent: 'space-around',
-      alignItems: 'center',
-      height: 55,
-      backgroundColor: '#FFFFFF', // warna background footer
-      borderColor:'#DFD7BF',
-      borderWidth:1,
-    },
-    menu: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    menuText: {
-      fontSize: 14,
-      fontWeight: 'bold',
-      color: '#333', // warna teks menu
-    },
-  });
