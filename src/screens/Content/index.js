@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {
   View,
@@ -7,6 +7,7 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
+  Animated,
 } from 'react-native';
 import {
   Activity,
@@ -21,26 +22,35 @@ import {
   Star1,
   SunFog,
 } from 'iconsax-react-native';
+import useBlogState from '../../../dataUtama';
 
 const navigation = useNavigation();
 
-const ContentScreen = () => {
+const ContentScreen = ({ route }) => {
+  const { id } = route.params;
+  const { blogs } = useBlogState();
+  const selectedItem = blogs.find((item) => item.id === id);
+
+  const scrollY = useRef(new Animated.Value(0)).current;
+
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.header}onPress={() => navigation.navigate('ContentAsliScreen')}>
+      <TouchableOpacity
+        style={styles.header}
+        onPress={() => navigation.navigate('ContentAsliScreen')}>
         <ArrowLeft
           color={'#BB9981'}
           variant="Linear"
           size={18}
-          style={{marginLeft: 10}}
+          style={{ marginLeft: 10 }}
         />
         <Text style={styles.headerText}>Back</Text>
       </TouchableOpacity>
       <ScrollView>
-        <GambarContent />
+      <GambarContent selectedItem={selectedItem} />
         <BlogTengah />
-        <TulisanBlog />
-        <Deskripsi />
+        <TulisanBlog  selectedItem={selectedItem}/>
+        <Deskripsi selectedItem={selectedItem}/>
         <Booking />
       </ScrollView>
     </View>
@@ -65,33 +75,13 @@ const styles = StyleSheet.create({
   },
 });
 
-const GambarContent = () => {
+const GambarContent = ({ selectedItem }) => {
   return (
     <View style={gambar.gambar}>
       <Image
         style={gambar.image}
         source={{
-          uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpPo36cmOpqXOaJ3B5TQ3TSSEZb7zHOwMHag&usqp=CAU',
-        }}
-      />
-      <View style={gambar.kotakPutih}></View>
-      <View style={gambar.row}></View>
-      <Image
-        style={gambar.imageDalem}
-        source={{
-          uri: 'https://asset.kompas.com/crops/rS9Tx0RWoTT3iKohMEX0PMcmJbM=/0x0:750x500/750x500/data/photo/2022/02/24/6216f993c35a0.jpg',
-        }}
-      />
-      <Image
-        style={gambar.imageDalem1}
-        source={{
-          uri: 'https://centralborneoguide.com/wp-content/uploads/2019/07/IMG_E2688.jpg',
-        }}
-      />
-      <Image
-        style={gambar.imageDalem2}
-        source={{
-          uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCHqEeti7Bn664UcfmCuDFm1ik01Op6NKi0A&usqp=CAU',
+          uri: selectedItem ? selectedItem.imageUrl : 'defaultImageURL',
         }}
       />
     </View>
@@ -109,56 +99,6 @@ const gambar = StyleSheet.create({
     width: 350,
     height: 350,
     borderRadius: 30,
-  },
-  imageDalem: {
-    margin: 8,
-    width: 55,
-    height: 55,
-    top: 90,
-    left: 280,
-    borderRadius: 10,
-    borderColor: 'white',
-    borderWidth: 2,
-    backgroundColor: 'white',
-    position: 'absolute',
-    zIndex: 2,
-  },
-  imageDalem1: {
-    margin: 8,
-    width: 55,
-    height: 55,
-    top: 155,
-    left: 280,
-    borderRadius: 10,
-    borderColor: 'white',
-    borderWidth: 2,
-    backgroundColor: 'white',
-    position: 'absolute',
-    zIndex: 2,
-  },
-  imageDalem2: {
-    margin: 8,
-    width: 55,
-    height: 55,
-    top: 220,
-    left: 280,
-    borderRadius: 10,
-    borderColor: 'white',
-    borderWidth: 2,
-    backgroundColor: 'white',
-    position: 'absolute',
-    zIndex: 2,
-  },
-  kotakPutih: {
-    backgroundColor: 'white',
-    position: 'absolute',
-    top: 90,
-    left: 280,
-    width: 70,
-    height: 200,
-    opacity: 0.5,
-    borderRadius: 20,
-    zIndex: 1,
   },
 });
 
@@ -260,33 +200,35 @@ const tengah = StyleSheet.create({
   },
 });
 
-const TulisanBlog = () => {
+const TulisanBlog = ({ selectedItem }) => {
+  const { title, rating, location } = selectedItem;
+
   return (
     <View style={tulisan.container}>
       <View style={tulisan.garis}></View>
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <Text style={tulisan.tulisanBesar}>Tanjung Puting</Text>
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <Text style={tulisan.tulisanBesar}>{title}</Text>
         <Star1
           size="20"
           color="#A9A9A9"
-          style={{marginLeft: 58, marginRight: 3}}
+          style={{ marginLeft: 58, marginRight: 3 }}
         />
-        <Text style={tulisan.tulisanKecil}>4.7(9k Review)</Text>
+        <Text style={tulisan.tulisanKecil}>{rating}</Text>
       </View>
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Location
             size="20"
             color="#A9A9A9"
-            style={{marginLeft: 18, marginRight: 3}}
+            style={{ marginLeft: 18, marginRight: 3 }}
           />
-          <Text>Kotawaringin</Text>
+          <Text>{location}</Text>
           <LocationAdd
             size="20"
             color="#FF8A65"
-            style={{marginLeft: 129, marginRight: 3}}
+            style={{ marginLeft: 129, marginRight: 3 }}
           />
-          <Text style={{color: '#C05F2C', fontWeight: 'bold'}}>
+          <Text style={{ color: '#C05F2C', fontWeight: 'bold' }}>
             Map Direction
           </Text>
         </View>
@@ -317,19 +259,12 @@ const tulisan = StyleSheet.create({
   },
 });
 
-const Deskripsi = () => {
+const Deskripsi = ({ selectedItem }) => {
+  const { description } = selectedItem;
   return (
     <View>
       <Text style={deskripsi.tulisanBesar}>Description</Text>
-      <Text style={deskripsi.textPanjang}>
-        Taman Nasional Tanjung Puting adalah sebuah taman nasional yang terletak
-        di semenanjung barat daya provinsi Kalimantan Tengah. Tanjung Puting
-        pada awalnya merupakan cagar alam dan suaka margasatwa yang ditetapkan
-        oleh Pemerintah Hindia Belanda pada tahun 1937. Selanjutnya berdasarkan
-        SK Menteri Kehutanan No. 687/Kpts-II/1996 tanggal 25 Oktober 1996,
-        Tanjung Puting ditunjuk sebagai Taman Nasional dengan luas seluruhnya
-        415.040 ha.
-      </Text>
+      <Text style={deskripsi.textPanjang}>{description}</Text>
     </View>
   );
 };

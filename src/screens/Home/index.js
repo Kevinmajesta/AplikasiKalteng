@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useRef} from 'react';
 import {
   View,
   StyleSheet,
@@ -6,6 +6,7 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
+  Animated,
 } from 'react-native';
 import {
   Notification,
@@ -25,37 +26,50 @@ import {
 import {categories} from '../../../datablog';
 
 const HomeScreen = () => {
+  const scrollY = useRef(new Animated.Value(0)).current;
+  const diffClampY = Animated.diffClamp(scrollY, 0, 30);
+  const recentY = diffClampY.interpolate({
+    inputRange: [0, 30],
+    outputRange: [0, -30],
+    extrapolate: 'clamp',
+  });
   return (
     <View style={header.container}>
-      <ScrollView>
-        <View style={header.header}>
-          {/* <User color={'brown'} variant="Bold" size={45} /> */}
-          <Image
-            style={{
-              height: '150%',
-              width: '20%',
-              borderRadius: 10,
-              top: 5,
-              borderWidth: 2,
-              borderColor: '#C05F2C',
-            }}
-            source={{
-              uri: 'https://i.scdn.co/image/ab67616d0000b2732334b4d3199bea648237751e',
-            }}
-          />
-          <Text style={header.textHeader1}>Welcome Back</Text>
-          <Text style={header.textHeader2}>Kevin Majesta Ivano</Text>
-        </View>
-        <View style={header.searchBar}>
+      <View style={header.header}>
+        {/* <User color={'brown'} variant="Bold" size={45} /> */}
+        <Image
+          style={{
+            height: '150%',
+            width: '20%',
+            borderRadius: 10,
+            top: 5,
+            borderWidth: 2,
+            borderColor: '#C05F2C',
+          }}
+          source={{
+            uri: 'https://i.scdn.co/image/ab67616d0000b2732334b4d3199bea648237751e',
+          }}
+        />
+        <Text style={header.textHeader1}>Welcome Back</Text>
+        <Text style={header.textHeader2}>Kevin Majesta Ivano</Text>
+      </View>
+      <Animated.ScrollView
+        showsVerticalScrollIndicator={false}
+        onScroll={Animated.event(
+          [{nativeEvent: {contentOffset: {y: scrollY}}}],
+          {useNativeDriver: true},
+        )}>
+        <Animated.View
+          style={[header.searchBar, {transform: [{translateY: recentY}]}]}>
           <SearchNormal color={'#C05F2C'} variant="Linear" size={25} />
           <Text style={{left: '-130%', opacity: 0.5}}>Discover a place</Text>
           <HambergerMenu color={'#C05F2C'} variant="Linear" size={25} />
-        </View>
+        </Animated.View>
         <ListBlogAtas />
         <ListExplore />
         <BlogUtama />
         <BlogAkhir />
-      </ScrollView>
+      </Animated.ScrollView>
     </View>
   );
 };
@@ -66,9 +80,12 @@ const header = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFFFFF',
+    zIndex: 999,
   },
+
   header: {
-    top: 15,
+    marginTop:25,
+    marginBottom:25,
     paddingHorizontal: 20,
     justifyContent: 'space-between',
     flexDirection: 'row',
@@ -76,6 +93,7 @@ const header = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     height: 52,
     paddingTop: 8,
+    zIndex:1000,
     paddingBottom: 4,
   },
   textHeader1: {
@@ -98,7 +116,7 @@ const header = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
     height: 50,
-    top: 20,
+    top: -20,
     margin: 25,
     borderRadius: 15,
     elevation: 2,
@@ -200,7 +218,6 @@ const ListBlogAtas = () => {
 const blog = StyleSheet.create({
   horizontal1: {
     flex: 2,
-    marginTop: 15,
     marginLeft: 25,
     backgroundColor: '#FFFFFF',
   },
@@ -648,4 +665,3 @@ const akhir = StyleSheet.create({
     borderRadius: 20,
   },
 });
-

@@ -9,21 +9,10 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {
-  Activity,
-  Activicty,
-  ArrowLeft,
-  Home,
-  Location,
-  LocationAdd,
-  Map1,
-  People,
-  Profile,
-  Star1,
-  SunFog,
-  Information,
   Personalcard,
   Bag2,
   SecurityUser,
+  NoteAdd,
 } from 'iconsax-react-native';
 
 const navigation = useNavigation();
@@ -132,6 +121,12 @@ const Akun = () => {
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <SecurityUser size={32} color="#C05F2C" />
           <Text style={[akun.textDalem, { marginLeft: 10 }]}>Security Account</Text>
+        </View>
+      </TouchableOpacity>
+      <TouchableOpacity style={akun.kotakAbu} onPress={() => navigation.navigate("AddForm")}>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <NoteAdd size={32} color="#C05F2C" />
+          <Text style={[akun.textDalem, { marginLeft: 10 }]}>Add Note</Text>
         </View>
       </TouchableOpacity>
     </View>

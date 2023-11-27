@@ -1,5 +1,13 @@
 import React from 'react';
-import {View, StyleSheet, Text, Image, ScrollView,TouchableOpacity} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Text,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import {SearchNormal, HambergerMenu} from 'iconsax-react-native';
 import useBlogState from '../../../dataUtama';
 import {useNavigation} from '@react-navigation/native';
@@ -29,9 +37,12 @@ const ContentAsliScreen = () => {
           <Text style={header.textHeader2}>Kevin Majesta Ivano</Text>
         </View>
         <View style={header.searchBar}>
-          <SearchNormal color={'#C05F2C'} variant="Linear" size={25} />
-          <Text style={{left: '-130%', opacity: 0.5}}>Discover a place</Text>
-          <HambergerMenu color={'#C05F2C'} variant="Linear" size={25} />
+            <SearchNormal color={'#C05F2C'} variant="Linear" size={25} />
+            <TouchableWithoutFeedback
+            onPress={() => navigation.navigate('SearchPage')}>
+            <Text style={{left: '-130%', opacity: 0.5}}>Discover a place</Text>
+            </TouchableWithoutFeedback>
+            <HambergerMenu color={'#C05F2C'} variant="Linear" size={25} />
         </View>
         <ListBlogAtas blogs={blogs} />
       </ScrollView>
@@ -87,8 +98,6 @@ const header = StyleSheet.create({
 const ListBlogAtas = ({blogs}) => {
   if (!blogs) {
     return null;
-    
-
   }
   return (
     <View style={blogir.container}>
@@ -99,24 +108,18 @@ const ListBlogAtas = ({blogs}) => {
               style={blogir.imageWithText}
               key={blog.id}
               onPress={() => {
-                if (index === 0) {
-                  navigation.navigate('ContentScreen', { id: blog.id });
-                }
-              }}
-            >
-              <Image
-                style={blogir.image}
-                source={{ uri: blog.imageUrl }}
-              />
+                navigation.navigate('ContentScreen', {id: blog.id});
+              }}>
+              <Image style={blogir.image} source={{uri: blog.imageUrl}} />
               <Text style={blogir.imageText}>{blog.title}</Text>
               <Text style={blogir.imageText1}>{blog.location}</Text>
-              {(index + 1) % 2 === 0 && <View style={{ width: 10 }} />}
+              {(index + 1) % 2 === 0 && <View style={{width: 10}} />}
             </TouchableOpacity>
           ))}
         </View>
       </ScrollView>
     </View>
-  );  
+  );
 };
 
 const blogir = StyleSheet.create({
@@ -137,7 +140,6 @@ const blogir = StyleSheet.create({
   },
   imageWithText: {
     alignItems: 'left',
-
   },
   image: {
     width: 350,
@@ -145,7 +147,7 @@ const blogir = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 2,
     marginBottom: 10,
-    marginTop:20,
+    marginTop: 20,
     marginRight: 10,
     left: 5,
   },

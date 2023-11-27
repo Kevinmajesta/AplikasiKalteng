@@ -1,8 +1,15 @@
 import React from 'react';
 import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {HomeScreen, Chat, OrderScreen, PromoScreen, ContentAsliScreen, ProfileScreen, ContentScreen} from '../screens';
-import {Home2, LocationDiscover, Receipt21, ProfileCircle, DiscountShape, DocumentText1, Message2, Activity, Profile} from 'iconsax-react-native'; 
+import {
+  HomeScreen,
+  ContentAsliScreen,
+  ProfileScreen,
+  ContentScreen,
+  Search,
+  BlogForm,
+} from '../screens';
+import {Home2, Activity, Profile} from 'iconsax-react-native';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -11,8 +18,8 @@ function MainApp() {
     <Tab.Navigator
       screenOptions={{
         tabBarHideOnKeyboard: true,
-        tabBarActiveTintColor: {color:"blue"},
-        tabBarInactiveTintColor: {color:"green"},
+        tabBarActiveTintColor: {color: 'blue'},
+        tabBarInactiveTintColor: {color: 'green'},
         tabBarStyle: {
           paddingBottom: 10,
           paddingTop: 10,
@@ -27,7 +34,7 @@ function MainApp() {
         name="HomeScreen"
         component={HomeScreen}
         options={{
-          tabBarLabel: 'HomeScreen',
+          tabBarLabel: 'Home',
           tabBarIcon: ({focused}) => (
             <Home2
               color="#C05F2C"
@@ -42,7 +49,7 @@ function MainApp() {
         name="ContentAsliScreen"
         component={ContentAsliScreen}
         options={{
-          tabBarLabel: 'ContentAsliScreen',
+          tabBarLabel: 'Content',
           tabBarIcon: ({focused}) => (
             <Activity
               color="#C05F2C"
@@ -57,7 +64,7 @@ function MainApp() {
         name="ProfileScreen"
         component={ProfileScreen}
         options={{
-          tabBarLabel: 'ProfileScreen',
+          tabBarLabel: 'Profile',
           tabBarIcon: ({focused}) => (
             <Profile
               color="#C05F2C"
@@ -83,12 +90,28 @@ const Router = () => {
         name="ContentScreen"
         component={ContentScreen}
         options={{
-          headerShown: false, 
+          headerShown: false,
           animationEnabled: true,
           animationTypeForReplace: 'pop',
           gestureEnabled: true,
-          gestureDirection : 'horizontal',
+          gestureDirection: 'horizontal',
           ...TransitionPresets.SlideFromRightIOS,
+        }}
+      />
+      <Stack.Screen
+        name="SearchPage"
+        component={Search}
+        options={{
+          headerShown: false,
+          presentation: 'transparentModal',
+        }}
+      />
+      <Stack.Screen
+        name="AddForm"
+        component={BlogForm}
+        options={{
+          headerShown: false,
+          presentation: 'transparentModal',
         }}
       />
     </Stack.Navigator>
