@@ -8,6 +8,7 @@ import {
   ContentScreen,
   Search,
   BlogForm,
+  EditBlogForm,
 } from '../screens';
 import {Home2, Activity, Profile} from 'iconsax-react-native';
 
@@ -112,6 +113,18 @@ const Router = () => {
         options={{
           headerShown: false,
           presentation: 'transparentModal',
+        }}
+      />
+      <Stack.Screen
+        name="EditBlog"
+        component={EditBlogForm}
+        options={{
+          headerShown: false,
+          animationEnabled: true,
+          animationTypeForReplace: 'pop',
+          gestureEnabled: true,
+          gestureDirection: 'horizontal',
+          ...TransitionPresets.SlideFromRightIOS,
         }}
       />
     </Stack.Navigator>

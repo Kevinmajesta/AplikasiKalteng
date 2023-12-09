@@ -4,35 +4,21 @@ import {
   View,
   StyleSheet,
   Text,
-  Image,
   ScrollView,
   TouchableOpacity,
-  Animated,
   TextInput,
   ActivityIndicator,
 } from 'react-native';
 import {ArrowLeft} from 'iconsax-react-native';
 import axios from 'axios';
 
-const AddForm = ({ route }) => {
-  const navigation = useNavigation();
-  const [loading, setLoading] = useState(false);
+const EditBlogForm = ({route}) => {
+  const {Id} = route.params;
   const [blogData, setBlogData] = useState({
     judul: '',
     tanggal: '',
     content: '',
   });
-
-  useEffect(() => {
-    if (route.params && route.params.blogData) {
-      const { blogData: initialBlogData } = route.params;
-      setBlogData({
-        judul: initialBlogData.judul,
-        tanggal: initialBlogData.tanggal,
-        content: initialBlogData.content,
-      });
-    }
-  }, [route.params]);
 
   const handleChange = (key, value) => {
     setBlogData({
@@ -40,18 +26,46 @@ const AddForm = ({ route }) => {
       [key]: value,
     });
   };
+  const navigation = useNavigation();
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    getBlogById();
+  }, [Id]);
 
-  const handleUpload = async () => {
+  const getBlogById = async () => {
+    try {
+      const response = await axios.get(
+        `https://657198e9d61ba6fcc0130c8e.mockapi.io/appkalteng/blog/${Id}`,
+      );
+      console.log('API Response:', response);
+      setBlogData({
+        judul: response.data.judul,
+        tanggal: response.data.tanggal,
+        content: response.data.content,
+      });
+    } catch (error) {
+      console.error('API Error:', error);
+    }
+  };
+
+  const handleUpdate = async () => {
     setLoading(true);
     try {
-      await axios.post(
-        'https://657198e9d61ba6fcc0130c8e.mockapi.io/appkalteng/blog',
-        {
-          judul: blogData.judul,
-          tanggal: blogData.tanggal,
-          content: blogData.content,
-        }
-      );
+      await axios
+        .put(
+          `https://657198e9d61ba6fcc0130c8e.mockapi.io/appkalteng/blog/${Id}`,
+          {
+            judul: blogData.judul,
+            tanggal: blogData.tanggal,
+            content: blogData.content,
+          },
+        )
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
       setLoading(false);
       navigation.navigate('ProfileScreen');
     } catch (e) {
@@ -59,12 +73,21 @@ const AddForm = ({ route }) => {
     }
   };
 
+  const handleDelete = async () => {
+    await axios.delete(`https://657198e9d61ba6fcc0130c8e.mockapi.io/appkalteng/blog/${Id}`)
+       .then(() => {
+         navigation.navigate('ProfileScreen');
+       })
+       .catch((error) => {
+         console.error(error);
+       });
+   }
+
   return (
     <View style={styles.container}>
       <TouchableOpacity
         style={styles.header}
-        onPress={() => navigation.navigate('ProfileScreen')}
-      >
+        onPress={() => navigation.navigate('ProfileScreen')}>
         <ArrowLeft
           color={'#BB9981'}
           variant="Linear"
@@ -81,7 +104,7 @@ const AddForm = ({ route }) => {
             <TextInput
               placeholder="Title"
               value={blogData.judul}
-              onChangeText={(text) => handleChange('judul', text)}
+              onChangeText={text => handleChange('judul', text)}
               placeholderTextColor="grey"
               multiline
             />
@@ -90,7 +113,7 @@ const AddForm = ({ route }) => {
             <TextInput
               placeholder="Date"
               value={blogData.tanggal}
-              onChangeText={(text) => handleChange('tanggal', text)}
+              onChangeText={text => handleChange('tanggal', text)}
               placeholderTextColor="grey"
               multiline
             />
@@ -99,20 +122,20 @@ const AddForm = ({ route }) => {
             <TextInput
               placeholder="Note"
               value={blogData.content}
-              onChangeText={(text) => handleChange('content', text)}
+              onChangeText={text => handleChange('content', text)}
               placeholderTextColor="grey"
               multiline
             />
           </View>
-          <TouchableOpacity style={awal.button} onPress={handleUpload}>
-            <Text style={awal.buttonLabel}>Upload</Text>
-          </TouchableOpacity>
-        </View>
-        {loading && (
-          <View style={styles.loadingOverlay}>
-            <ActivityIndicator size="large" color={'blue'} />
+          <View style ={awal.column}>
+            <TouchableOpacity style={awal.button} onPress={handleUpdate}>
+              <Text style={awal.buttonLabel}>Update</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={awal.button} onPress={handleDelete}>
+              <Text style={awal.buttonLabel}>Delete</Text>
+            </TouchableOpacity>
           </View>
-        )}
+        </View>
       </ScrollView>
     </View>
   );
@@ -140,7 +163,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    opacity: 0.4,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -153,10 +175,15 @@ const awal = StyleSheet.create({
     marginLeft: 25,
     marginRight: 25,
   },
+  column:{
+    flexDirection:'row',
+  },
   button: {
     marginTop: 15,
-    width: '100%',
+    width: 150,
     height: 50,
+    marginRight:10,
+    marginLeft:10,
     borderRadius: 10,
     backgroundColor: '#BB9981',
     alignItems: 'center',
@@ -166,7 +193,6 @@ const awal = StyleSheet.create({
   buttonLabel: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: 'white',
   },
   kotakAtas: {
     backgroundColor: '#FAF3F0',
@@ -201,4 +227,4 @@ const awal = StyleSheet.create({
     borderColor: 'grey',
   },
 });
-export default AddForm;
+export default EditBlogForm;

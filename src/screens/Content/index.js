@@ -33,7 +33,7 @@ const ContentScreen = ({ route }) => {
 
   const scrollY = useRef(new Animated.Value(0)).current;
 
-  return (
+  return (  
     <View style={styles.container}>
       <TouchableOpacity
         style={styles.header}

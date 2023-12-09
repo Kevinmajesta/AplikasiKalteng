@@ -1,5 +1,5 @@
-import React from 'react';
-import {useNavigation} from '@react-navigation/native';
+import React, {useState, useCallback} from 'react';
+import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import {
   View,
   StyleSheet,
@@ -7,35 +7,113 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
+  ActivityIndicator,
+  RefreshControl,
 } from 'react-native';
-import {
-  Personalcard,
-  Bag2,
-  SecurityUser,
-  NoteAdd,
-} from 'iconsax-react-native';
+import {Personalcard, Bag2, SecurityUser, NoteAdd} from 'iconsax-react-native';
+import axios from 'axios';
+import {ContentScreen} from '../../screens';
+import {NoteScreen, noteScreen} from '../../componen';
+// import {dataUtama} from
 
-const navigation = useNavigation();
+const ProfileScreen = ({route}) => {
+  const navigation = useNavigation();
+  const [blogData, setBlogData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-const ProfileScreen = () => {
+  const [refreshing, setRefreshing] = useState(false);
+  const getDataBlog = async () => {
+    try {
+      const response = await axios.get(
+        'https://657198e9d61ba6fcc0130c8e.mockapi.io/appkalteng/blog',
+      );
+      setBlogData(response.data);
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      getDataBlog();
+      setRefreshing(false);
+    }, 1500);
+  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      getDataBlog();
+    }, []),
+  );
+
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Profile</Text>
-      </View>
-      <ScrollView>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.headerText}>Profile</Text>
+        </View>
         <Foto />
-        <Akun />
-        {/* Konten profil Anda di sini */}
-      </ScrollView>
-    </View>
+        <View style={akun.container}>
+          <Text style={akun.textBesar}>My Account</Text>
+          <TouchableOpacity style={akun.kotakAbu}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Personalcard size={32} color="#C05F2C" />
+              <Text style={[akun.textDalem, {marginLeft: 10}]}>
+                Information
+              </Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity style={akun.kotakAbu}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Bag2 size={32} color="#C05F2C" />
+              <Text style={[akun.textDalem, {marginLeft: 10}]}>
+                Wishlist Place
+              </Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity style={akun.kotakAbu}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <SecurityUser size={32} color="#C05F2C" />
+              <Text style={[akun.textDalem, {marginLeft: 10}]}>
+                Security Account
+              </Text>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={akun.kotakAbu}
+            onPress={() => navigation.navigate('AddForm')}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <NoteAdd size={32} color="#C05F2C" />
+              <Text style={[akun.textDalem, {marginLeft: 10}]}>Add Note</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+        <TouchableOpacity style={akun.formContainer}>
+          <View style={{}}>
+            {loading ? (
+              <ActivityIndicator size={'large'} color={'blue'} />
+            ) : (
+              blogData.map((item, index) => (
+                <NoteScreen item={item} key={index} />
+              ))
+            )}
+          </View>
+        </TouchableOpacity>
+      </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: '#FFFFFF',
+    flex: 1,
   },
   header: {
     flexDirection: 'row',
@@ -101,42 +179,12 @@ const foto = StyleSheet.create({
   },
 });
 
-const Akun = () => {
-  return (
-    <View style={akun.container}>
-      <Text style={akun.textBesar}>My Account</Text>
-      <TouchableOpacity style={akun.kotakAbu}>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Personalcard size={32} color="#C05F2C" />
-          <Text style={[akun.textDalem, { marginLeft: 10 }]}>Information</Text>
-        </View>
-      </TouchableOpacity>
-      <TouchableOpacity style={akun.kotakAbu}>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Bag2 size={32} color="#C05F2C" />
-          <Text style={[akun.textDalem, { marginLeft: 10 }]}>Wishlist Place</Text>
-        </View>
-      </TouchableOpacity>
-      <TouchableOpacity style={akun.kotakAbu}>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <SecurityUser size={32} color="#C05F2C" />
-          <Text style={[akun.textDalem, { marginLeft: 10 }]}>Security Account</Text>
-        </View>
-      </TouchableOpacity>
-      <TouchableOpacity style={akun.kotakAbu} onPress={() => navigation.navigate("AddForm")}>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <NoteAdd size={32} color="#C05F2C" />
-          <Text style={[akun.textDalem, { marginLeft: 10 }]}>Add Note</Text>
-        </View>
-      </TouchableOpacity>
-    </View>
-  );
-};
-
 const akun = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'white',
+  },
+  formContainer: {
+    backgroundColor: 'white',
   },
   textBesar: {
     marginLeft: 15,
@@ -159,7 +207,5 @@ const akun = StyleSheet.create({
     color: 'black',
   },
 });
-
-
 
 export default ProfileScreen;

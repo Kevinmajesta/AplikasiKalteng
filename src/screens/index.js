@@ -4,4 +4,5 @@ import ProfileScreen from "./Profile";
 import ContentAsliScreen from "./ContentAsli";
 import Search from "./Search";
 import BlogForm from "./BlogForm";
-export {HomeScreen, ContentAsliScreen, ContentScreen, ProfileScreen, Search, BlogForm}
+import EditBlogForm from "./EditForm"
+export {HomeScreen, ContentAsliScreen, ContentScreen, ProfileScreen, Search, BlogForm, EditBlogForm}
