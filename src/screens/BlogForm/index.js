@@ -12,7 +12,8 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import {ArrowLeft} from 'iconsax-react-native';
-import axios from 'axios';
+import storage from '@react-native-firebase/storage';
+import firestore from '@react-native-firebase/firestore';
 
 const AddForm = ({ route }) => {
   const navigation = useNavigation();
@@ -41,21 +42,20 @@ const AddForm = ({ route }) => {
     });
   };
 
-  const handleUpload = async () => {
+const handleUpload = async () => {
+
     setLoading(true);
     try {
-      await axios.post(
-        'https://657198e9d61ba6fcc0130c8e.mockapi.io/appkalteng/blog',
-        {
-          judul: blogData.judul,
-          tanggal: blogData.tanggal,
-          content: blogData.content,
-        }
-      );
+      await firestore().collection('blog').add({
+        judul: blogData.judul,
+        tanggal: blogData.tanggal,
+        content: blogData.content,
+      });
       setLoading(false);
+      console.log('Blog added!');
       navigation.navigate('ProfileScreen');
-    } catch (e) {
-      console.log(e);
+    } catch (error) {
+      console.log(error);
     }
   };
 

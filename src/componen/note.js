@@ -2,6 +2,8 @@ import React from 'react';
 import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import {NoteText} from 'iconsax-react-native';
 import {useNavigation} from '@react-navigation/native';
+import firestore from '@react-native-firebase/firestore';
+import storage from '@react-native-firebase/storage';
 
 const NoteScreen = ({item}) => {
   const navigation = useNavigation();

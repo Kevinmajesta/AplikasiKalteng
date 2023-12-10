@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "87269376182",
+    "project_id": "appkalteng",
+    "storage_bucket": "appkalteng.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:87269376182:android:d8dfde5a2d946298d52617",
+        "android_client_info": {
+          "package_name": "com.kaltengbuilt"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCMoyxUtv210BxzdGgyOWm2-aJSKCTKZUc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

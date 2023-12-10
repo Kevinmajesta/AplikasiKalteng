@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from 'react';
+import React, {useState,useEffect,useCallback} from 'react';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import {
   View,
@@ -11,41 +11,56 @@ import {
   RefreshControl,
 } from 'react-native';
 import {Personalcard, Bag2, SecurityUser, NoteAdd} from 'iconsax-react-native';
-import axios from 'axios';
 import {ContentScreen} from '../../screens';
 import {NoteScreen, noteScreen} from '../../componen';
-// import {dataUtama} from
+import firestore from '@react-native-firebase/firestore';
+
 
 const ProfileScreen = ({route}) => {
   const navigation = useNavigation();
-  const [blogData, setBlogData] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const [blogData, setBlogData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
-  const getDataBlog = async () => {
-    try {
-      const response = await axios.get(
-        'https://657198e9d61ba6fcc0130c8e.mockapi.io/appkalteng/blog',
-      );
-      setBlogData(response.data);
-      setLoading(false);
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-    setTimeout(() => {
-      getDataBlog();
+    try {
+      firestore()
+        .collection('blog')
+        .onSnapshot(querySnapshot => {
+          const blogs = [];
+          querySnapshot.forEach(documentSnapshot => {
+            blogs.push({
+              ...documentSnapshot.data(),
+              id: documentSnapshot.id,
+            });
+          });
+          console.log('Blogs:', blogs); // Log the blogs array
+          setBlogData(blogs);
+        });
       setRefreshing(false);
-    }, 1500);
+    } catch (error) {
+      console.error('Error fetching blogs:', error);
+      setRefreshing(false);
+    }
   }, []);
-  useFocusEffect(
-    useCallback(() => {
-      getDataBlog();
-    }, []),
-  );
+  
+  useEffect(() => {
+    const subscriber = firestore()
+      .collection('blog')
+      .onSnapshot(querySnapshot => {
+        const blogs = [];
+        querySnapshot.forEach(documentSnapshot => {
+          blogs.push({
+            ...documentSnapshot.data(),
+            id: documentSnapshot.id,
+          });
+        });
+        setBlogData(blogs);
+        setLoading(false);
+      });
+    return () => subscriber();
+  }, []);
 
   return (
     <ScrollView
@@ -114,6 +129,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#FFFFFF',
     flex: 1,
+    
   },
   header: {
     flexDirection: 'row',
@@ -185,6 +201,7 @@ const akun = StyleSheet.create({
   },
   formContainer: {
     backgroundColor: 'white',
+    height:180
   },
   textBesar: {
     marginLeft: 15,
